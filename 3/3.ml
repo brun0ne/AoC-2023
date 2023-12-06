@@ -1,6 +1,5 @@
 (* Util - strings *)
 let explode s = List.init (String.length s) (String.get s);;
-let implode cl = String.init (List.length cl) (List.nth cl);;
 
 (* Read lines from file *)
 let read_lines name: string list =
@@ -33,7 +32,7 @@ let rec get_symbols_pos_h (lines: char list list) (id: int) (symbols: char list)
     | [] -> acc
   in
   match lines with
-  | line :: rest -> let to_append = (f line id []) in to_append :: (get_symbols_pos_h rest (id + (List.length (List.filter (fun x -> x != 0) to_append))) symbols)
+  | line :: rest -> let to_append = (f line id []) in to_append :: (get_symbols_pos_h rest (id + (List.length (List.filter (fun x -> x <> 0) to_append))) symbols)
   | [] -> [];;
 
 let get_symbols_pos (lines: char list list) (symbols: char list): int list list =
@@ -89,7 +88,7 @@ let rec shift (ill: int list list) (dir_x: int) (dir_y: int): (int list list) =
     List.map (fun il ->
       match il with
       | x :: rest -> rest @ [0]
-      | [] -> raise (invalid_arg "shift: invalid bll")
+      | [] -> raise (invalid_arg "shift: invalid int[][]")
       ) ill
   )
   | 1, 0 -> (
@@ -98,7 +97,7 @@ let rec shift (ill: int list list) (dir_x: int) (dir_y: int): (int list list) =
   | 0, -1 -> (
     match ill with
     | x :: rest -> rest @ []
-    | [] -> raise (invalid_arg "shift: invalid bll")
+    | [] -> raise (invalid_arg "shift: invalid int[][]")
   )
   | 0, 1 -> (
       [] :: (remove_last ill)
@@ -131,19 +130,19 @@ let rec extract_nums (lines: char list list) (symbols: char list): element list 
     match line with
     | c :: rest when is_digit(c) -> (
       match adj_list, line with
-      | x :: adj_rest, c :: line_rest when symbol_id == 0 -> extract_from_line line_rest adj_rest (curr_acc ^ (String.make 1 c)) x
+      | x :: adj_rest, c :: line_rest when symbol_id = 0 -> extract_from_line line_rest adj_rest (curr_acc ^ (String.make 1 c)) x
       | x :: adj_rest, c :: line_rest -> extract_from_line line_rest adj_rest (curr_acc ^ (String.make 1 c)) symbol_id
       | [], [] -> []
       | _, _ -> raise (invalid_arg "Critical error")
     )
     | c :: rest -> (
       match adj_list, curr_acc with
-      | _ :: adj_list, str when symbol_id != 0 -> El(symbol_id, int_of_string str) :: (extract_from_line rest adj_list "" 0)
-      | [], str when symbol_id != 0 -> [El(symbol_id, int_of_string str)]
+      | _ :: adj_list, str when symbol_id <> 0 -> El(symbol_id, int_of_string str) :: (extract_from_line rest adj_list "" 0)
+      | [], str when symbol_id <> 0 -> [El(symbol_id, int_of_string str)]
       | _ :: adj_list, _ -> extract_from_line rest adj_list "" 0
       | [], _ -> []
     )
-    | [] -> if (curr_acc != "") && symbol_id != 0 then [El(symbol_id, int_of_string curr_acc)] else []
+    | [] -> if (curr_acc <> "") && symbol_id <> 0 then [El(symbol_id, int_of_string curr_acc)] else []
   in let rec extract_from_all (lines_left: char list list) (reach_left: int list list): element list =
     match lines_left, reach_left with
     | ld :: lines_left, rd :: reach_left -> (extract_from_line ld rd "" 0) @ (extract_from_all lines_left reach_left)
@@ -155,23 +154,23 @@ let rec extract_nums (lines: char list list) (symbols: char list): element list 
 (* Count elements with some id *)
 let rec count_elements_with_id (el: element list) (id: int): int =
   match el with
-  | El(eid, num) :: rest when eid == id -> 1 + (count_elements_with_id rest id)
+  | El(eid, num) :: rest when eid = id -> 1 + (count_elements_with_id rest id)
   | El(_, _) :: rest -> count_elements_with_id rest id
-  | [] -> 0 
+  | [] -> 0;;
 
 (* Get only elements when n of them have the same id *)
 let rec filter_elements_h (el: element list) (rest: element list) (n: int): element list =
   match rest with
-  | El(eid, num) :: rest when (count_elements_with_id el eid) == n -> El(eid, num) :: (filter_elements_h el rest n)
+  | El(eid, num) :: rest when (count_elements_with_id el eid) = n -> El(eid, num) :: (filter_elements_h el rest n)
   | El(_, _) :: rest -> filter_elements_h el rest n
-  | [] -> []
+  | [] -> [];;
 
 let filter_elements (el: element list) (n: int): element list =
   filter_elements_h el el n;;
 
 (* Sort elements by ID so the same are near each other *)
 let sort_element_by_id (el: element list): element list = 
-  List.sort (fun e1 e2 -> match e1, e2 with El(id1, _), El(id2, _) -> compare id1 id2) el
+  List.sort (fun e1 e2 -> match e1, e2 with El(id1, _), El(id2, _) -> compare id1 id2) el;;
 
 (* Print elements *)
 let print_elements (el: element list): unit =
@@ -183,19 +182,11 @@ let rec sum_of_gear_ratios (sorted_el: element list): int =
   match sorted_el with
   | El(_, num1) :: El(_, num2) :: rest -> (num1 * num2) + (sum_of_gear_ratios rest)
   | [] -> 0
-  | _ -> raise (invalid_arg "Wrong input: length not even")
+  | _ -> raise (invalid_arg "Wrong input: length not even");;
 
-(*      *)
-(* Main *)
-(*      *)
-
-let lines: string list = (read_lines "input.txt");;
+(* Prepare data *)
+let lines: string list = read_lines "input.txt";;
 let char_lists: char list list = List.filter (fun line -> List.length line > 1) (List.map explode lines);;
-
-open Printf;;
-
-(* print back input *)
-(* List.iter (fun xs -> List.iter (printf "%c") xs; print_newline ()) (char_lists);; *)
 
 let reach = get_reach char_lists;; (* reach test *)
 (* print_ill reach;; *)
