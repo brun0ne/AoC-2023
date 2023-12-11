@@ -189,6 +189,12 @@ class PipeSystem:
     
     # Note: it is not guaranteed that this algorithm 
     #       will find the number of inner or outer spots.
+    # 
+    #       Whether it returns inner or outer count depends on the starting point.
+    #       
+    #       I decided it's good enough to manually check the outputed map
+    #       and tweak the right-left handedness accordingly.
+    #
     def get_inner_marked_2D(self, cycle = None) -> Tuple[int, list[list[str]]]:
         # Returns: count, 2D map
         
