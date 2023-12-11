@@ -176,7 +176,7 @@ class PipeSystem:
             if added == 0:
                 break
             
-    def mark_to_the_right(self, xss: list[list], velocity: (int, int), relative_to_pipe: Pipe):
+    def mark_to_the_right(self, xss: list[list], velocity: Tuple[int, int], relative_to_pipe: Pipe):
         # Mark spots to the right from the POV of the pipe
         if velocity == (0, 1):  # going down
             self.place_if_empty(xss, relative_to_pipe, -1, 0)
