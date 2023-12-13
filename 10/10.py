@@ -84,7 +84,7 @@ class Pipe:
         return (False, [])
 
 class PipeSystem:
-    # Assuming NxN grid
+    # Assuming NxM grid
     pipes2D: list[list[Pipe]]
     start: Pipe
     
