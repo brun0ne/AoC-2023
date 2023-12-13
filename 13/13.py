@@ -87,8 +87,8 @@ class Map:
                 self.array_2d[y][x] = not self.array_2d[y][x]
                 
                 # calculate
-                
                 success, num = self.get_summary([endpoints_x] if endpoints_x else [], [endpoints_y] if endpoints_y else [])
+                
                 # revert
                 self.array_2d[y][x] = old
                 
