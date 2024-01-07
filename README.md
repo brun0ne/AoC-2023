@@ -5,5 +5,10 @@
 [Day 8](8/8.py) [Day 10](10/10.py) [Day 11](11/11.py) [Day 13](13/13.py) [Day 14](14/14.py)
 [Day 15](15/15.py) [Day 16](16/16.py)
 
+[1st part only] [Day 12](12/12.py) 
+
 ## OCaml (purely functional)
 [Day 3](3/3.ml) [Day 6](6/6.ml) [Day 9](9/9.ml)
+
+## Not done
+Days 17-25. Maybe next year!
